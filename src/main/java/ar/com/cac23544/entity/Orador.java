@@ -7,8 +7,8 @@ public class Orador {
 	private Long id;
 	private String nombre;
 	private String apellido;
-	private String mail;
 	private String tema;
+	private String email;
 	private LocalDate fechaAlta;
 	
 	
@@ -19,24 +19,24 @@ public class Orador {
 	// usar cuando voy a enviar un objeto a la db
 	//usar cont+shift+s
 	
-	public Orador(String nombre, String apellido, String mail, String tema, LocalDate fechaAlta) {
-		init(nombre, apellido, mail, tema, fechaAlta);
+	public Orador(String nombre, String apellido, String tema, String email, LocalDate fechaAlta) {
+		init(nombre, apellido, tema, email, fechaAlta);
 	//alt+shit+m
 	}
 	
-	public Orador(Long id, String nombre, String apellido, String mail, String tema, LocalDate fechaAlta) {
+	public Orador(Long id, String nombre, String apellido, String tema, String email, LocalDate fechaAlta) {
 		this.id = id;
-		init(nombre, apellido, mail, tema, fechaAlta);
+		init(nombre, apellido, tema, email, fechaAlta);
 
 			
 	}
 		
 	
-	private void init(String nombre, String apellido, String mail, String tema, LocalDate fechaAlta) {
+	private void init(String nombre, String apellido, String tema, String email, LocalDate fechaAlta) {
 		this.nombre = nombre;
 		this.apellido = apellido;
-		this.mail = mail;
 		this.tema = tema;
+		this.email = email;
 		this.fechaAlta = fechaAlta;
 
 	}
@@ -46,8 +46,8 @@ public class Orador {
 	
 	@Override
 	public String toString() {
-		return "orador [id=" + id + ", nombre=" + nombre + ", apellido=" + apellido + ", mail=" + mail + ", tema="
-				+ tema + ", fechaAlta=" + fechaAlta + "]";
+		return "orador [id=" + id + ", nombre=" + nombre + ", apellido=" + apellido + ", tema=" + tema + ", email="
+				+ email + ", fechaAlta=" + fechaAlta + "]";
 	}
 	
 	
@@ -83,20 +83,20 @@ public class Orador {
 		this.apellido = apellido;
 	}
 
-	public String getMail() {
-		return mail;
-	}
-
-	public void setMail(String mail) {
-		this.mail = mail;
-	}
-
 	public String getTema() {
 		return tema;
 	}
 
 	public void setTema(String tema) {
 		this.tema = tema;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public LocalDate getFechaAlta() {
