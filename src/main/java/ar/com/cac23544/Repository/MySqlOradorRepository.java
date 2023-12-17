@@ -22,7 +22,7 @@ public class MySqlOradorRepository implements OradorRepository {
 			
 		
 		//2 preparo sql 
-		String sql = "insert into orador (nombre, apellido, tema, email, fecha_alta) values(?,?,?,?,?)";
+		String sql = "insert into orador (nombre, apellido, tema, email, coment, fecha_alta) values(?,?,?,?,?,?)";
 		
 		try(Connection con = AdministradorDeConexiones.getConnection()) {
 			PreparedStatement statement = con.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);	 
@@ -30,7 +30,8 @@ public class MySqlOradorRepository implements OradorRepository {
 			statement.setString(2, orador.getApellido());
 			statement.setString(3, orador.getTema());
 			statement.setString(4, orador.getEmail());
-			statement.setDate(5, new java.sql.Date(Dateutils.asDate(orador.getFechaAlta()).getTime()));
+			statement.setString(5, orador.getComent());
+			statement.setDate(6, new java.sql.Date(Dateutils.asDate(orador.getFechaAlta()).getTime()));
 			
 			statement.executeUpdate();//INSET/UPDATE/DELETE
 			
@@ -50,7 +51,7 @@ public class MySqlOradorRepository implements OradorRepository {
 		//Connection con = AdministradorDeConexiones.getConnection();
 		
 		//2 preparo sql 
-		String sql = " select id, nombre, apellido, tema, email, fecha_alta from orador where id =?";
+		String sql = " select id, nombre, apellido, tema, email, coment, fecha_alta from orador where id =?";
 		
 		Orador orador = null;
 		try(Connection con = AdministradorDeConexiones.getConnection()) {
@@ -65,9 +66,10 @@ public class MySqlOradorRepository implements OradorRepository {
 				String apellido = res.getString(3);
 				String tema = res.getString(4);
 				String email = res.getString(5);
-				Date fechaAlta = res.getDate(6);
+				String coment = res.getString(6);
+				Date fechaAlta = res.getDate(7);
 				
-				orador = new Orador(dbId, nombre, apellido, tema, email, Dateutils.asLocalDate(fechaAlta)); 
+				orador = new Orador(dbId, nombre, apellido, tema, email, coment, Dateutils.asLocalDate(fechaAlta)); 
 				
 			}
 		}catch(Exception e) {
@@ -80,7 +82,7 @@ public class MySqlOradorRepository implements OradorRepository {
 	public void update(Orador orador) {
 		
 		String sql = "update orador "
-				+ "set nombre=?, apellido=?, tema=?, email=? "
+				+ "set nombre=?, apellido=?, tema=?, email=?, coment=?"
 				+ "where id = ?";
 		
 		try(Connection con = AdministradorDeConexiones.getConnection()) {
@@ -91,7 +93,8 @@ public class MySqlOradorRepository implements OradorRepository {
 			statement.setString(2, orador.getApellido());
 			statement.setString(3, orador.getTema());
 			statement.setString(4, orador.getEmail());
-			statement.setLong(5, orador.getId());
+			statement.setString(5, orador.getComent());
+			statement.setLong(6, orador.getId());
 			
 			
 			statement.executeUpdate();
@@ -123,7 +126,7 @@ public class MySqlOradorRepository implements OradorRepository {
 	@Override
 	public List<Orador> findAll() {
 	
- 		String sql = " select id, nombre, apellido, tema, email, fecha_alta from orador";
+ 		String sql = " select id, nombre, apellido, tema, email, coment, fecha_alta from orador";
 		
  		List<Orador> oradores = new ArrayList<>();
  		
@@ -139,9 +142,10 @@ public class MySqlOradorRepository implements OradorRepository {
 				String apellido = res.getString(3);
 				String tema = res.getString(4);
 				String email = res.getString(5);
-				LocalDate fechaAlta = Dateutils.asLocalDate(res.getDate(6));
+				String coment = res.getString(6);
+				LocalDate fechaAlta = Dateutils.asLocalDate(res.getDate(7));
 				
-				oradores.add(new Orador(dbId, nombre, apellido, tema, email,fechaAlta)); 
+				oradores.add(new Orador(dbId, nombre, apellido, tema, email, coment, fechaAlta)); 
 				
 			}
 		}catch(Exception e) {

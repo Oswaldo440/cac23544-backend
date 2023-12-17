@@ -2,6 +2,7 @@ package ar.com.cac23544.controllers;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,6 +21,9 @@ import jakarta.servlet.http.HttpServletResponse;
 //htpp://localhost:8080/web-app-23544/api/orador/nuevo
 @WebServlet("/api/orador")
 public class NuevoOradorController extends HttpServlet{
+	
+	//ahora por medio del repository guardo en la DB
+	private OradorRepository repository = new MySqlOradorRepository();
 	
 	//crear Post
 	protected void doPost(
@@ -42,16 +46,12 @@ public class NuevoOradorController extends HttpServlet{
 				Orador nuevo = new Orador(
 						oradorRequest.getNombre(), 
 						oradorRequest.getApellido(),
-						oradorRequest.getEmail(),
 						oradorRequest.getTema(),
-						LocalDate.now()
-				);		
+						oradorRequest.getEmail(),
+						oradorRequest.getComent(),
+						LocalDate.now());		
 		
-				//ahora por medio del repository guardo en la DB
-				
-				OradorRepository repository = new MySqlOradorRepository();
-				
-				repository.save(nuevo);
+				this.repository.save(nuevo);
 				
 				//ahora respondo al front: json, Convirtiendo el nuevo Orador a json
 				String jsonParaEnviarALFrontend = mapper.writeValueAsString(nuevo);
@@ -60,8 +60,71 @@ public class NuevoOradorController extends HttpServlet{
 	
 	
 	}	
-			
+	
+	protected void doGet(
+			HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		
+				
+		//ahora por medio del repository guarda en la db
+		List<Orador> listado = this.repository.findAll();
+		
+		//convierto Objecto java a json string
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.registerModule(new JavaTimeModule());
+		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);		
+		
+		//ahora respondo al front: json, Convirtiendo el nuevo Orador a json
+		String jsonParaEnviarALFrontend = mapper.writeValueAsString(listado);
+			
+		response.getWriter().print(jsonParaEnviarALFrontend);
+	}
+
+	protected void doDelete(
+			HttpServletRequest request, 
+			HttpServletResponse response) throws ServletException, IOException {
+		
+		String id = request.getParameter("id");
+		
+		this.repository.delete(Long.parseLong(id));
+		
+		response.setStatus(HttpServletResponse.SC_OK);//200
+	}	
+	
+	protected void doPut(
+			HttpServletRequest request, 
+			HttpServletResponse response) throws ServletException, IOException {
+		
+		String id  = request.getParameter("id");
+		
+		//ahora quiero los datos que viene en el body
+		String json = request.getReader()
+				.lines()
+				.collect(Collectors.joining(System.lineSeparator()));//spring
+		
+		//convierto de json String a Objecto java usando libreria de jackson2
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.registerModule(new JavaTimeModule());
+		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+		
+		OradorRequest oradorRequest = mapper.readValue(json, OradorRequest.class);
+
+		//busco el orador en la db
+		Orador orador = this.repository.getById(Long.parseLong(id));
+		
+		//ahora actualizo los datos
+		orador.setNombre(oradorRequest.getNombre());
+		orador.setApellido(oradorRequest.getApellido());
+		orador.setTema(oradorRequest.getTema());
+		orador.setEmail(oradorRequest.getEmail());
+		orador.setComent(oradorRequest.getComent());
+		
+		//ahora si, actualizo en la db!!
+		this.repository.update(orador);
+		
+		//le informa al front ok
+		response.setStatus(HttpServletResponse.SC_OK);
+	}
 }
 			
 

@@ -9,6 +9,7 @@ public class Orador {
 	private String apellido;
 	private String tema;
 	private String email;
+	private String coment;
 	private LocalDate fechaAlta;
 	
 	
@@ -19,24 +20,25 @@ public class Orador {
 	// usar cuando voy a enviar un objeto a la db
 	//usar cont+shift+s
 	
-	public Orador(String nombre, String apellido, String tema, String email, LocalDate fechaAlta) {
-		init(nombre, apellido, tema, email, fechaAlta);
+	public Orador(String nombre, String apellido, String tema, String email, String coment, LocalDate fechaAlta) {
+		init(nombre, apellido, tema, email, coment, fechaAlta);
 	//alt+shit+m
 	}
 	
-	public Orador(Long id, String nombre, String apellido, String tema, String email, LocalDate fechaAlta) {
+	public Orador(Long id, String nombre, String apellido, String tema, String email, String coment, LocalDate fechaAlta) {
 		this.id = id;
-		init(nombre, apellido, tema, email, fechaAlta);
+		init(nombre, apellido, tema, email, coment, fechaAlta);
 
 			
 	}
 		
 	
-	private void init(String nombre, String apellido, String tema, String email, LocalDate fechaAlta) {
+	private void init(String nombre, String apellido, String tema, String email, String coment, LocalDate fechaAlta) {
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.tema = tema;
 		this.email = email;
+		this.coment = coment;
 		this.fechaAlta = fechaAlta;
 
 	}
@@ -47,7 +49,7 @@ public class Orador {
 	@Override
 	public String toString() {
 		return "orador [id=" + id + ", nombre=" + nombre + ", apellido=" + apellido + ", tema=" + tema + ", email="
-				+ email + ", fechaAlta=" + fechaAlta + "]";
+				+ email + ", coment =" + coment + ", fechaAlta=" + fechaAlta + "]";
 	}
 	
 	
@@ -97,6 +99,12 @@ public class Orador {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public String getComent() {
+		return coment;
+	}
+	public void setComent(String coment) {
+		this.coment = coment;
 	}
 
 	public LocalDate getFechaAlta() {
